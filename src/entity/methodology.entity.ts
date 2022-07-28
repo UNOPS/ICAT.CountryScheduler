@@ -12,6 +12,7 @@ import { Applicability } from './applicability.entity';
 
 import { BaseTrackingEntity } from './base/base.tracking.entity';
 import { Country } from './contry.entity';
+import { MethodologyData } from './methodology-data.entity';
 import { MitigationAction } from './mitigation-action.entity';
 import { Sector } from './sector.entity';
 
@@ -83,4 +84,9 @@ export class Methodology extends BaseTrackingEntity {
   @ManyToOne((type) => Applicability, { cascade: false })
   @JoinColumn({ name: 'applicabilityId' })
   applicability?: Applicability;
+
+
+  @ManyToOne((type) => MethodologyData, { cascade: false })
+  @JoinColumn({ name: 'methodId' })
+  method?: MethodologyData;
 }

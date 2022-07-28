@@ -13,6 +13,7 @@ import { InstitutionType } from './entity/institution.typr.entity';
 import { LearningMaterialSector } from './entity/learning-material-sector.entity';
 import { LearningMaterialUserType } from './entity/learning-material-usertype.entity';
 import { LearningMaterial } from './entity/learning-material.entity';
+import { MethodologyData } from './entity/methodology-data.entity';
 import { Methodology } from './entity/methodology.entity';
 import { MitigationAction } from './entity/mitigation-action.entity';
 import { Sector } from './entity/sector.entity';
@@ -35,14 +36,47 @@ import { UserType } from './entity/user.type.entity';
       username: 'root',
       password: '',
       database: 'portelservice',
-      entities: [Applicability,Country,Methodology,MitigationAction,Sector,LearningMaterialSector,LearningMaterialUserType,LearningMaterial,UserType,DefaultValue,UnitConversion,User,Institution,InstitutionCategory,InstitutionType],
+      entities: [
+        Applicability,
+        Country,
+        Methodology,
+        MitigationAction,
+        Sector,
+        LearningMaterialSector,
+        LearningMaterialUserType,
+        LearningMaterial,
+        UserType,
+        DefaultValue,
+        UnitConversion,
+        User,
+        Institution,
+        InstitutionCategory,
+        InstitutionType,
+        MethodologyData
+      ],
 
       synchronize: false,
     }),
-    TypeOrmModule.forFeature([Applicability,Country,Methodology,MitigationAction,Sector,LearningMaterialSector,LearningMaterialUserType,LearningMaterial,UserType,DefaultValue,UnitConversion,User,Institution,InstitutionCategory,InstitutionType]),
+    TypeOrmModule.forFeature([
+      Applicability,
+      Country,
+      Methodology,
+      MitigationAction,
+      Sector,
+      LearningMaterialSector,
+      LearningMaterialUserType,
+      LearningMaterial,
+      UserType,
+      DefaultValue,
+      UnitConversion,
+      User,
+      Institution,
+      InstitutionCategory,
+      InstitutionType,
+      MethodologyData]),
     HttpModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

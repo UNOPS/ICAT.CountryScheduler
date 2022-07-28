@@ -17,6 +17,7 @@ import { Sector } from './entity/sector.entity';
 import { UnitConversion } from './entity/unit-conversion.entity';
 import { User } from './entity/user.entity';
 import { Institution } from './entity/institution.entity';
+import { MethodologyData } from './entity/methodology-data.entity';
 
 
 @Injectable()
@@ -67,6 +68,9 @@ export class AppService {
     @InjectRepository(Institution)
     private readonly insRepository: Repository<Institution>,
 
+    @InjectRepository(MethodologyData)
+    private readonly methodologyDataRepository: Repository<MethodologyData>,
+
     private httpService: HttpService,
   ) { }
 
@@ -78,6 +82,7 @@ export class AppService {
   async handleCron() {
     this.logger.debug('Called when the current second is 50');
     await this.syncCountry();
+    await this.syncMethodologyData();
     await this.syncSector();
     await this.syncApplicability();
     await this.syncMAction();
@@ -132,12 +137,38 @@ export class AppService {
     });
   }
 
+  async syncMethodologyData() {
+    let localMCountry = await this.methodologyDataRepository.find();
+    await this.getMetodlogyFromPMU('methodology-data').subscribe(async (m) => {
+      m.data.map((me) => {
+
+        if (me.uniqueIdentification) {
+          let exsistingItem = localMCountry.find(
+            (a) => a.uniqueIdentification === me.uniqueIdentification,
+          );
+
+          if (!exsistingItem) {
+            //item not found Insert
+            console.log('Insert country');
+
+            this.methodologyDataRepository.save(me);
+          } else {
+            //item found Update;
+            console.log('Update country');
+            // console.log(me);
+            this.methodologyDataRepository.save(me);
+          }
+        }
+      });
+    });
+  }
+
   async syncUser() {
     let localMCountry = await this.userRepository.find();
     this.getMetodlogyFromPMU('users/findUserBy').subscribe(async (m) => {
       m.data.map(async (me) => {
 
-        // console.log("ME+++",me)
+        console.log("ME+++", me)
         if (me.uniqueIdentification) {
 
           let exsistingItem = await localMCountry.find(
@@ -149,28 +180,37 @@ export class AppService {
           if (!exsistingItem) {
             let ins = new Institution();
             ins.name = me.mrvInstitution;
-            ins.description=me.mrvInstitution;
-            
+            ins.description = me.mrvInstitution;
+
             ins.country = me.countryId;
             // ins.
-            let n=await this.insRepository.insert(ins);
+            let n = await this.insRepository.insert(ins);
 
             //item not found Insert
-            me.id = null;
-            me.userTypeId = "1";
-            me.institutionId=n.identifiers[0].id;
 
-            await this.userRepository.insert(me);
+            if (me.userTypeId == 2) {
+              me.id = null;
+              me.userTypeId = "1";
+              me.institutionId = n.identifiers[0].id;
+              await this.userRepository.insert(me);
+            }
+
+
+
           }
           else {
             //item found Update;
             let id;
             await localMCountry.find((a) => { if (a.uniqueIdentification === me.uniqueIdentification) { id = a.id; } });
-            me.id = id;
+
+            if (me.userTypeId == 2) {
+              me.id = id;
+              me.userTypeId = "1";
+              console.log('update user======', me.userTypeId);
+              await this.userRepository.save(me);
+            }
             console.log('Update user');
-            me.userTypeId = "1";
-            console.log('update user======', me.userTypeId);
-            await this.userRepository.save(me);
+
           }
         }
       });
@@ -251,10 +291,10 @@ export class AppService {
 
   async synclearningMeterial() {
     let localMCountry = await this.learningMeterialRepository.find();
-    console.log("me===========", localMCountry)
+    // console.log("me===========", localMCountry)
     await this.getMetodlogyFromPMU('learning-material').subscribe(async (m) => {
       m.data.map((me) => {
-        console.log("me===========", me)
+        // console.log("me===========", me)
         if (me.uniqueIdentification) {
           let exsistingItem = localMCountry.find(
             (a) => a.uniqueIdentification === me.uniqueIdentification,
@@ -262,12 +302,12 @@ export class AppService {
           // console.log("me===========",me)
           if (!exsistingItem) {
             //item not found Insert
-            console.log('Insert learning Meterial');
+            // console.log('Insert learning Meterial');
 
             this.learningMeterialRepository.save(me);
           } else {
             //item found Update;
-            console.log('Update learning Meterial');
+            // console.log('Update learning Meterial');
             // console.log(me);
             this.learningMeterialRepository.save(me);
           }
@@ -287,12 +327,12 @@ export class AppService {
 
           if (!exsistingItem) {
             //item not found Insert
-            console.log('Insert learning Meterial Sector');
+            // console.log('Insert learning Meterial Sector');
 
             this.learningMeterialSectorRepository.save(me);
           } else {
             //item found Update;
-            console.log('Update learning Meterial Sector');
+            // console.log('Update learning Meterial Sector');
             // console.log(me);
             this.learningMeterialSectorRepository.save(me);
           }
@@ -305,21 +345,93 @@ export class AppService {
     let localMCountry = await this.learningMeterialUserTypeRepository.find();
     await this.getMetodlogyFromPMU('learning-material/user-type').subscribe(async (m) => {
       m.data.map((me) => {
+        // console.log("me++++++++++,",me)
         if (me.uniqueIdentification) {
           let exsistingItem = localMCountry.find(
             (a) => a.uniqueIdentification === me.uniqueIdentification,
           );
 
           if (!exsistingItem) {
+            if (me.userid == 2) {
+              me.userType = 1;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 6) {
+              me.userType = 2;
+              console.log("me++++++++++,", me)
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 7) {
+              me.userType = 3;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 8) {
+              me.userType = 4;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 9) {
+              me.userType = 5;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 10) {
+              me.userType = 6;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 11) {
+              me.userType = 7;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 12) {
+              me.userType = 8;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 13) {
+              me.userType = 9;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
             //item not found Insert
             console.log('Insert learning Meterial Type');
 
-            this.learningMeterialUserTypeRepository.save(me);
+
           } else {
-            //item found Update;
-            console.log('Update learning Meterial type');
-            // console.log(me);
-            this.learningMeterialUserTypeRepository.save(me);
+            if (me.userid == 2) {
+              me.userType = 1;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 6) {
+              me.userType = 2;
+              console.log("me++++++++++,", me)
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 7) {
+              me.userType = 3;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 8) {
+              me.userType = 4;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 9) {
+              me.userType = 5;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 10) {
+              me.userType = 6;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 11) {
+              me.userType = 7;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 12) {
+              me.userType = 8;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            if (me.userid == 13) {
+              me.userType = 9;
+              this.learningMeterialUserTypeRepository.save(me);
+            }
+            // this.learningMeterialUserTypeRepository.save(me);
           }
         }
       });
