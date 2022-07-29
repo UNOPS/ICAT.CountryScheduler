@@ -1,6 +1,7 @@
 
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn,ManyToOne ,JoinColumn} from 'typeorm';
 import { BaseTrackingEntity } from './base/base.tracking.entity';
+import { Country } from './contry.entity';
 
 @Entity()
 export class DefaultValue extends BaseTrackingEntity {
@@ -33,5 +34,17 @@ export class DefaultValue extends BaseTrackingEntity {
   @Column({ default: null })
   uniqueIdentification: string;
 
+  @ManyToOne(() => Country)
+  @JoinColumn({ name: 'countryId' })
+    public country!: Country;
+
+
+  @Column({ default: null })
+  isMac: Number; //1
+  
+  @Column({ default: null })  // baseLine , project
+  scenario: string;
+
   name: string;
 }
+
