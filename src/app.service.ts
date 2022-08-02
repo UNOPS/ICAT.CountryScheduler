@@ -443,6 +443,7 @@ export class AppService {
     console.log('Insert--------');
     await this.getMetodlogyFromPMU('methodology').subscribe(async (m) => {
       m.data.map(async (me) => {
+        
         if (me.uniqueIdentification) {
           let exsistingItem = await localMethodology.find(
             (a) => a.uniqueIdentification === me.uniqueIdentification,
@@ -450,11 +451,19 @@ export class AppService {
           if (!exsistingItem) {
             //item not found Insert
             console.log('Insert');
-
+        
+            me.baselineImage = me.method.baselineImage;
+            me.projectImage = me.method.projectImage;
+            me.projectionImage = me.method.projectionImage;
+            me.leakageImage = me.method.leakageImage;
+            me.resultImage = me.method.resultImage;
             await this.methodologyRepository.insert(me);
           } else {
-            //item found Update;
-            // console.log('Update');
+            me.baselineImage = me.method.baselineImage;
+            me.projectImage = me.method.projectImage;
+            me.projectionImage = me.method.projectionImage;
+            me.leakageImage = me.method.leakageImage;
+            me.resultImage = me.method.resultImage;
             console.log('Update', me.isActive);
             await this.methodologyRepository.save(me);
           }
