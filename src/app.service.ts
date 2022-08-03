@@ -23,10 +23,10 @@ import { MethodologyData } from './entity/methodology-data.entity';
 @Injectable()
 export class AppService {
   private readonly logger = new Logger(AppService.name);
-  private readonly pmuBaseURl = 'http://localhost:7081/';
-  private readonly calEngineBaseURl = 'http://localhost:3600/';
-  // private readonly pmuBaseURl = 'http://65.2.75.253:7090/';
-  // private readonly calEngineBaseURl = 'http://65.2.75.253:3600/';
+  // private readonly pmuBaseURl = 'http://localhost:7081/';
+  // private readonly calEngineBaseURl = 'http://localhost:3600/';
+  private readonly pmuBaseURl = 'http://65.2.75.253:7090/';
+  private readonly calEngineBaseURl = 'http://65.2.75.253:3600/';
 
   /**
    *
@@ -98,8 +98,11 @@ export class AppService {
   async manualSynLerningMeterial() {
 
     await this.synclearningMeterial();
-    await this.synclearningMeterialSector();
-    await this.synclearningMeterialUserType();
+    setTimeout(async () => {
+      await this.synclearningMeterialSector();
+      await this.synclearningMeterialUserType();
+    },1000)
+   
   }
 
   async manualSynCountry() {
