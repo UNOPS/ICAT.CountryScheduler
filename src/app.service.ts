@@ -3,7 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AxiosResponse } from 'axios';
-import { Observable } from 'rxjs';
+import { Observable, timeout } from 'rxjs';
 import { Repository } from 'typeorm';
 import { Applicability } from './entity/applicability.entity';
 import { Country } from './entity/contry.entity';
@@ -18,6 +18,7 @@ import { UnitConversion } from './entity/unit-conversion.entity';
 import { User } from './entity/user.entity';
 import { Institution } from './entity/institution.entity';
 import { MethodologyData } from './entity/methodology-data.entity';
+import { CountrySector } from './entity/country-sector.entity';
 
 
 @Injectable()
@@ -25,8 +26,8 @@ export class AppService {
   private readonly logger = new Logger(AppService.name);
   // private readonly pmuBaseURl = 'http://localhost:7081/';
   // private readonly calEngineBaseURl = 'http://localhost:3600/';
-  private readonly pmuBaseURl = 'http://65.2.75.253:7090/';
-  private readonly calEngineBaseURl = 'http://65.2.75.253:3600/';
+  private readonly pmuBaseURl = 'http://13.233.122.62:7090/';
+  private readonly calEngineBaseURl = 'http://13.233.122.62:3600/';
 
   /**
    *
@@ -34,42 +35,32 @@ export class AppService {
   constructor(
     @InjectRepository(Methodology)
     private readonly methodologyRepository: Repository<Methodology>,
-
     @InjectRepository(Country)
     private readonly countryRepository: Repository<Country>,
-
     @InjectRepository(Sector)
     private readonly sectorRepository: Repository<Sector>,
-
     @InjectRepository(MitigationAction)
     private readonly mitidationActionRepository: Repository<MitigationAction>,
-
     @InjectRepository(Applicability)
     private readonly applicabilityRepository: Repository<Applicability>,
-
     @InjectRepository(LearningMaterialSector)
     private readonly learningMeterialSectorRepository: Repository<LearningMaterialSector>,
-
     @InjectRepository(LearningMaterial)
     private readonly learningMeterialRepository: Repository<LearningMaterial>,
-
     @InjectRepository(LearningMaterialUserType)
     private readonly learningMeterialUserTypeRepository: Repository<LearningMaterialUserType>,
-
     @InjectRepository(DefaultValue)
     private readonly defaultValueRepository: Repository<DefaultValue>,
-
     @InjectRepository(UnitConversion)
     private readonly unitConversionRepository: Repository<UnitConversion>,
-
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-
     @InjectRepository(Institution)
     private readonly insRepository: Repository<Institution>,
-
     @InjectRepository(MethodologyData)
-    private readonly methodologyDataRepository: Repository<MethodologyData>,
+    private readonly methodologyDataRepository: Repository<CountrySector>,
+    @InjectRepository(CountrySector)
+    private readonly countrySectorRepository: Repository<CountrySector>,
 
     private httpService: HttpService,
   ) { }
@@ -101,8 +92,8 @@ export class AppService {
     setTimeout(async () => {
       await this.synclearningMeterialSector();
       await this.synclearningMeterialUserType();
-    },1000)
-   
+    }, 1000)
+
   }
 
   async manualSynCountry() {
@@ -138,6 +129,54 @@ export class AppService {
         }
       });
     });
+
+    await this.syncSectorCountry();
+  }
+
+  async syncSectorCountry() {
+    let localMCountrySector = await this.countrySectorRepository.find();
+    let Pmu :any;
+    let sec:any;
+
+    // setTimeout(async () =>{
+      await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
+        // console.log("mmmm",m.data)
+        Pmu =m.data;
+  
+        sec =await localMCountrySector.filter((a) => !Pmu.some((b) => a.uniqueIdentification == b.uniqueIdentification));
+      });
+    // },1000)
+   
+    setTimeout(async () =>{
+      console.log("mmmm",sec)
+      if(sec.length>0){
+        sec.forEach((a) => this.countrySectorRepository.delete(a.id));
+       }
+
+       await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
+        m.data.map((me) => {
+  
+          if (me.uniqueIdentification) {
+            let exsistingItem = localMCountrySector.find(
+              (a) => a.uniqueIdentification === me.uniqueIdentification,
+            );
+  
+            if (!exsistingItem) {
+              console.log('Insert country');
+  
+              this.countrySectorRepository.save(me);
+            } else {;
+              console.log('Update country');
+              this.countrySectorRepository.save(me);
+            }
+          }
+        });
+      });
+    },2000)
+   
+
+   
+
   }
 
   async syncMethodologyData() {
@@ -171,7 +210,7 @@ export class AppService {
     this.getMetodlogyFromPMU('users/findUserBy').subscribe(async (m) => {
       m.data.map(async (me) => {
 
-        console.log("ME+++", me)
+        //console.log("ME+++", me)
         if (me.uniqueIdentification) {
 
           let exsistingItem = await localMCountry.find(
@@ -204,12 +243,19 @@ export class AppService {
           else {
             //item found Update;
             let id;
-            await localMCountry.find((a) => { if (a.uniqueIdentification === me.uniqueIdentification) { id = a.id; } });
+
 
             if (me.userTypeId == 2) {
+              await localMCountry.find((a) => { if (a.uniqueIdentification === me.uniqueIdentification) { id = a.id; } });
+              // console.log("ME+++", me)
+              let co= await this.countryRepository.findOne({where:{id:me.countryId}})
+              let ins1 = await this.insRepository.findOne({ where: { country: co, type: null } })
               me.id = id;
               me.userTypeId = "1";
-              console.log('update user======', me.userTypeId);
+               me.institution=ins1;
+              console.log("ME+++", me)
+             
+              //console.log('update user======', me.userTypeId);
               await this.userRepository.save(me);
             }
             console.log('Update user');
@@ -446,7 +492,7 @@ export class AppService {
     console.log('Insert--------');
     await this.getMetodlogyFromPMU('methodology').subscribe(async (m) => {
       m.data.map(async (me) => {
-        
+
         if (me.uniqueIdentification) {
           let exsistingItem = await localMethodology.find(
             (a) => a.uniqueIdentification === me.uniqueIdentification,
@@ -454,7 +500,7 @@ export class AppService {
           if (!exsistingItem) {
             //item not found Insert
             console.log('Insert');
-        
+
             me.baselineImage = me.method.baselineImage;
             me.projectImage = me.method.projectImage;
             me.projectionImage = me.method.projectionImage;

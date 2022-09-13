@@ -27,6 +27,12 @@ export class AppController {
     this.appService.manualSynCountry();
   }
 
+  @Get('country1')
+  syncSectorCountry(){
+    console.log("Country")
+    this.appService.syncSectorCountry();
+  }
+
   @Get('user')
   manualSyncUser(){
     console.log("User")

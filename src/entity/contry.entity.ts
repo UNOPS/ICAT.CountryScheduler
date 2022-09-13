@@ -1,6 +1,7 @@
 
-import {Column,Entity,PrimaryGeneratedColumn} from 'typeorm';
+import {Column,Entity,PrimaryGeneratedColumn,OneToMany} from 'typeorm';
 import { BaseTrackingEntity } from './base/base.tracking.entity';
+import { CountrySector } from './country-sector.entity';
 import { countryStatus } from './country-status.entity';
 
 @Entity({name: 'country'})
@@ -75,4 +76,8 @@ export class Country extends BaseTrackingEntity{
 
   @Column({ default: null })
   uniqueIdentification: string;
+
+
+  @OneToMany(() => CountrySector, countrySector => countrySector.country,{eager:true})
+  countrysector: CountrySector[];
 }

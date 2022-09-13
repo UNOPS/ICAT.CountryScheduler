@@ -1,5 +1,6 @@
 import {Entity,Column,PrimaryGeneratedColumn,OneToMany,} from 'typeorm';
 import { BaseTrackingEntity } from "./base/base.tracking.entity";
+import { CountrySector } from './country-sector.entity';
 import { LearningMaterialSector } from './learning-material-sector.entity';
 
 @Entity({ name: 'sector' })
@@ -25,6 +26,10 @@ export class Sector extends BaseTrackingEntity {
 
     @Column({ default: null })
     uniqueIdentification: string;
+
+    @OneToMany(() => CountrySector, countrySector => countrySector.sector)
+  public countrysector!: CountrySector[];
+
 
     @OneToMany(() => LearningMaterialSector,(learningMaterialSector) => learningMaterialSector.sector)
     public learningMaterialsector!: LearningMaterialSector[];

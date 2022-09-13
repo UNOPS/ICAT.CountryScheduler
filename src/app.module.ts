@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Applicability } from './entity/applicability.entity';
 import { Country } from './entity/contry.entity';
+import { CountrySector } from './entity/country-sector.entity';
 import { DefaultValue } from './entity/defaultValue.entity';
 import { InstitutionCategory } from './entity/institition.catagory.entity';
 import { Institution } from './entity/institution.entity';
@@ -34,7 +35,7 @@ import { UserType } from './entity/user.type.entity';
       // password: 'password',
       //database: 'nccdsndb',
       username: 'root',
-      password: '',
+      password: 'icat',
       database: 'portelservice',
       entities: [
         Applicability,
@@ -52,7 +53,8 @@ import { UserType } from './entity/user.type.entity';
         Institution,
         InstitutionCategory,
         InstitutionType,
-        MethodologyData
+        MethodologyData,
+        CountrySector
       ],
 
       synchronize: false,
@@ -73,7 +75,8 @@ import { UserType } from './entity/user.type.entity';
       Institution,
       InstitutionCategory,
       InstitutionType,
-      MethodologyData]),
+      MethodologyData,
+      CountrySector]),
     HttpModule,
   ],
   controllers: [AppController],
