@@ -31,14 +31,14 @@ export class Country extends BaseTrackingEntity{
   @Column({ default: 1 })
   sortOrder: number;
 
-  @Column()
-  submissions: string; // add as string for document upload 
+  // @Column()
+  // submissions: string; // add as string for document upload 
 
-  @Column({ default: null })
-  emissionSummary: string;
+  // @Column({ default: null })
+  // emissionSummary: string;
 
-  @Column({ default: null })
-  ndcDocuments: string;
+  // @Column({ default: null })
+  // ndcDocuments: string;
 
   @Column({ default: null })
   isSystemUse: boolean;
@@ -73,6 +73,9 @@ export class Country extends BaseTrackingEntity{
 
   @Column({ default: null })
   dataCollectionModule: boolean;
+
+  @Column({ default: null })
+  dataCollectionGhgModule: boolean;
 
   @Column({ default: null })
   uniqueIdentification: string;

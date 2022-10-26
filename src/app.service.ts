@@ -98,6 +98,10 @@ export class AppService {
 
   async manualSynCountry() {
     await this.syncCountry();
+    setTimeout(async () =>{
+      await this.syncSectorCountry();
+    },1000)
+    
   }
 
   async manualSynUser() {
@@ -130,7 +134,7 @@ export class AppService {
       });
     });
 
-    await this.syncSectorCountry();
+    
   }
 
   async syncSectorCountry() {
@@ -138,41 +142,43 @@ export class AppService {
     let Pmu :any;
     let sec:any;
 
-    // setTimeout(async () =>{
       await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
-        // console.log("mmmm",m.data)
         Pmu =m.data;
   
         sec =await localMCountrySector.filter((a) => !Pmu.some((b) => a.uniqueIdentification == b.uniqueIdentification));
+      
+        if(sec.length>0){
+          console.log(sec)
+          sec.forEach((a) => this.countrySectorRepository.delete(a.id));
+         }
       });
-    // },1000)
+
+      
    
     setTimeout(async () =>{
       console.log("mmmm",sec)
-      if(sec.length>0){
-        sec.forEach((a) => this.countrySectorRepository.delete(a.id));
-       }
+      
 
        await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
-        m.data.map((me) => {
+        m.data.map(async (me) => {
   
-          if (me.uniqueIdentification) {
+          if (me.uniqueIdentification !=null && me.uniqueIdentification.length>5)  {
             let exsistingItem = localMCountrySector.find(
               (a) => a.uniqueIdentification === me.uniqueIdentification,
             );
   
             if (!exsistingItem) {
-              console.log('Insert country');
+              console.log('Insert country sector',me.id);
   
-              this.countrySectorRepository.save(me);
+              await this.countrySectorRepository.save(me);
             } else {;
-              console.log('Update country');
-              this.countrySectorRepository.save(me);
+              console.log('Update country sector',me.id);
+              await this.countrySectorRepository.save(me);
             }
           }
         });
       });
-    },2000)
+    },5000)
    
 
    

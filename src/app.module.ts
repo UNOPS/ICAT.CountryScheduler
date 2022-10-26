@@ -35,7 +35,7 @@ import { UserType } from './entity/user.type.entity';
       // password: 'password',
       //database: 'nccdsndb',
       username: 'root',
-      password: 'icat',
+      password: 'pradeep123#',
       database: 'portelservice',
       entities: [
         Applicability,
