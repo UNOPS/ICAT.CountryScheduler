@@ -28,14 +28,11 @@ import { UserType } from './entity/user.type.entity';
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      // username: 'root',
-      // password: 'password',
-      //database: 'nccdsndb',
-      username: 'root',
-      password: '',
-      database: 'portelservice',
+      socketPath: process.env.SOCKET_PATH,
+      port: Number(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
       entities: [
         Applicability,
         Country,
@@ -54,8 +51,8 @@ import { UserType } from './entity/user.type.entity';
         InstitutionType,
         MethodologyData
       ],
-
       synchronize: false,
+      // extra: { socketPath: '/cloudsql/unops-cpit-icat-prod:europe-west3:icat-qa' },
     }),
     TypeOrmModule.forFeature([
       Applicability,
