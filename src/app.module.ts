@@ -7,7 +7,7 @@ import { AppService } from './app.service';
 import { Applicability } from './entity/applicability.entity';
 import { Country } from './entity/contry.entity';
 import { DefaultValue } from './entity/defaultValue.entity';
-import { InstitutionCategory } from './entity/institition.catagory.entity';
+import { InstitutionCategory } from './entity/institution.catagory.entity';
 import { Institution } from './entity/institution.entity';
 import { InstitutionType } from './entity/institution.typr.entity';
 import { LearningMaterialSector } from './entity/learning-material-sector.entity';
@@ -20,8 +20,6 @@ import { Sector } from './entity/sector.entity';
 import { UnitConversion } from './entity/unit-conversion.entity';
 import { User } from './entity/user.entity';
 import { UserType } from './entity/user.type.entity';
-
-// https://docs.nestjs.com/techniques/task-scheduling
 
 @Module({
   imports: [
@@ -49,10 +47,9 @@ import { UserType } from './entity/user.type.entity';
         Institution,
         InstitutionCategory,
         InstitutionType,
-        MethodologyData
+        MethodologyData,
       ],
       synchronize: false,
-      // extra: { socketPath: '/cloudsql/unops-cpit-icat-prod:europe-west3:icat-qa' },
     }),
     TypeOrmModule.forFeature([
       Applicability,
@@ -70,10 +67,11 @@ import { UserType } from './entity/user.type.entity';
       Institution,
       InstitutionCategory,
       InstitutionType,
-      MethodologyData]),
+      MethodologyData,
+    ]),
     HttpModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

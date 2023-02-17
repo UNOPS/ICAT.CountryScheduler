@@ -1,17 +1,15 @@
-
-import {Column,Entity,PrimaryGeneratedColumn} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseTrackingEntity } from './base/base.tracking.entity';
 import { countryStatus } from './country-status.entity';
 
-@Entity({name: 'country'})
-export class Country extends BaseTrackingEntity{
-
+@Entity({ name: 'country' })
+export class Country extends BaseTrackingEntity {
   constructor() {
     super();
     this.createdBy = '';
     this.editedBy = '';
   }
-    
+
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -31,7 +29,7 @@ export class Country extends BaseTrackingEntity{
   sortOrder: number;
 
   @Column()
-  submissions: string; // add as string for document upload 
+  submissions: string;
 
   @Column({ default: null })
   emissionSummary: string;
@@ -48,14 +46,10 @@ export class Country extends BaseTrackingEntity{
   @Column({ default: null })
   registeredDate: Date;
 
-  
   @Column({ default: null })
   isMember: boolean;
 
- // @Column({ default: null })
- // isRegister: boolean;
-
-  @Column({ default: null })  // enum 
+  @Column({ default: null })
   countryStatus: countryStatus;
 
   @Column({ default: null })
