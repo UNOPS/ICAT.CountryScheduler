@@ -7,7 +7,7 @@ import { AppService } from './app.service';
 import { Applicability } from './entity/applicability.entity';
 import { Country } from './entity/contry.entity';
 import { DefaultValue } from './entity/defaultValue.entity';
-import { InstitutionCategory } from './entity/institition.catagory.entity';
+import { InstitutionCategory } from './entity/institution.catagory.entity';
 import { Institution } from './entity/institution.entity';
 import { InstitutionType } from './entity/institution.typr.entity';
 import { LearningMaterialSector } from './entity/learning-material-sector.entity';
@@ -21,21 +21,16 @@ import { UnitConversion } from './entity/unit-conversion.entity';
 import { User } from './entity/user.entity';
 import { UserType } from './entity/user.type.entity';
 
-// https://docs.nestjs.com/techniques/task-scheduling
-
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 3306,
-      // username: 'root',
-      // password: 'password',
-      //database: 'nccdsndb',
-      username: 'root',
-      password: '',
-      database: 'portelservice',
+      socketPath: process.env.SOCKET_PATH,
+      port: Number(process.env.DATABASE_PORT),
+      username: process.env.DATABASE_USER,
+      password: process.env.DATABASE_PASSWORD,
+      database: process.env.DATABASE_NAME,
       entities: [
         Applicability,
         Country,
@@ -52,9 +47,8 @@ import { UserType } from './entity/user.type.entity';
         Institution,
         InstitutionCategory,
         InstitutionType,
-        MethodologyData
+        MethodologyData,
       ],
-
       synchronize: false,
     }),
     TypeOrmModule.forFeature([
@@ -73,10 +67,11 @@ import { UserType } from './entity/user.type.entity';
       Institution,
       InstitutionCategory,
       InstitutionType,
-      MethodologyData]),
+      MethodologyData,
+    ]),
     HttpModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

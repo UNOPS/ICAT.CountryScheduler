@@ -1,34 +1,34 @@
 <<<<<<< HEAD
-# README #
+
+# README
 
 This README would normally document whatever steps are necessary to get your application up and running.
 
-### What is this repository for? ###
+### What is this repository for?
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+- Quick summary
+- Version
+- [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
-### How do I get set up? ###
+### How do I get set up?
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+- Summary of set up
+- Configuration
+- Dependencies
+- Database configuration
+- How to run tests
+- Deployment instructions
 
-### Contribution guidelines ###
+### Contribution guidelines
 
-* Writing tests
-* Code review
-* Other guidelines
+- Writing tests
+- Code review
+- Other guidelines
 
-### Who do I talk to? ###
+### Who do I talk to?
 
-* Repo owner or admin
-* Other community or team contact
-=======
+- Repo owner or admin
+- # Other community or team contact
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
@@ -102,4 +102,5 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
->>>>>>> 35b2bb4 (first)
+
+> > > > > > > 35b2bb4 (first)

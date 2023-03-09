@@ -2,10 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Applicability } from './applicability.entity';
@@ -47,7 +44,7 @@ export class Methodology extends BaseTrackingEntity {
 
   @Column({ default: null })
   Documents: string;
-  
+
   @Column({ default: 0 })
   isActive: number;
 
@@ -74,17 +71,13 @@ export class Methodology extends BaseTrackingEntity {
   @JoinColumn({ name: 'countryId' })
   country?: Country;
 
-  
-
   @ManyToOne((type) => Sector, { cascade: false })
   @JoinColumn({ name: 'sectorId' })
   sector?: Sector;
 
-  
   @ManyToOne((type) => Applicability, { cascade: false })
   @JoinColumn({ name: 'applicabilityId' })
   applicability?: Applicability;
-
 
   @ManyToOne((type) => MethodologyData, { cascade: false })
   @JoinColumn({ name: 'methodId' })
