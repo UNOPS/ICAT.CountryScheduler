@@ -47,4 +47,3 @@ export class DefaultValue extends BaseTrackingEntity {
 
   name: string;
 }
-
