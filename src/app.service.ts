@@ -26,7 +26,7 @@ export class AppService {
   private readonly logger = new Logger(AppService.name);
   // private readonly pmuBaseURl = 'http://localhost:7081/';
   // private readonly calEngineBaseURl = 'http://localhost:3600/';
-  private readonly pmuBaseURl = 'http://13.233.122.62:7090/';
+  private readonly pmuBaseURl = 'https://icat-ca-tool.climatesi.com/pmu-api/';
   private readonly calEngineBaseURl = 'http://13.233.122.62:3600/';
 
   /**
@@ -250,16 +250,22 @@ export class AppService {
           else {
             //item found Update;
             let id;
-
+            let pass;
+            let salt;
 
             if (me.userTypeId == 2) {
-              await localMCountry.find((a) => { if (a.uniqueIdentification === me.uniqueIdentification) { id = a.id; } });
-              // console.log("ME+++", me)
+              await localMCountry.find((a) => { if (a.uniqueIdentification === me.uniqueIdentification) { id = a.id; pass=a.password; salt=a.salt } });
+              // console.log("ME=====", me)
+              // console.log(pass,salt)
               let co= await this.countryRepository.findOne({where:{id:me.countryId}})
+              // console.log("ME=====", co)
               let ins1 = await this.insRepository.findOne({ where: { country: co, type: null } })
+              console.log("ME=====", ins1) 
               me.id = id;
               me.userTypeId = "1";
                me.institution=ins1;
+               me.password =pass;
+               me.salt =salt;
               console.log("ME+++", me)
              
               //console.log('update user======', me.userTypeId);
