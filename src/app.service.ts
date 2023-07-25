@@ -121,14 +121,9 @@ export class AppService {
           );
 
           if (!exsistingItem) {
-            //item not found Insert
-            console.log('Insert country');
 
             this.countryRepository.save(me);
           } else {
-            //item found Update;
-            console.log('Update country');
-            // console.log(me);
             this.countryRepository.save(me);
           }
         }
@@ -149,7 +144,6 @@ export class AppService {
         sec =await localMCountrySector.filter((a) => !Pmu.some((b) => a.uniqueIdentification == b.uniqueIdentification));
       
         if(sec.length>0){
-          console.log(sec)
           sec.forEach((a) => this.countrySectorRepository.delete(a.id));
          }
       });
@@ -157,9 +151,6 @@ export class AppService {
       
    
     setTimeout(async () =>{
-      console.log("mmmm",sec)
-      
-
        await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
         m.data.map(async (me) => {
   
@@ -169,11 +160,9 @@ export class AppService {
             );
   
             if (!exsistingItem) {
-              console.log('Insert country sector',me.id);
   
               await this.countrySectorRepository.save(me);
-            } else {;
-              console.log('Update country sector',me.id);
+            } else {
               await this.countrySectorRepository.save(me);
             }
           }
@@ -197,14 +186,8 @@ export class AppService {
           );
 
           if (!exsistingItem) {
-            //item not found Insert
-            console.log('Insert country');
-
             this.methodologyDataRepository.save(me);
           } else {
-            //item found Update;
-            console.log('Update country');
-            // console.log(me);
             this.methodologyDataRepository.save(me);
           }
         }
@@ -217,7 +200,6 @@ export class AppService {
     this.getMetodlogyFromPMU('users/findUserBy').subscribe(async (m) => {
       m.data.map(async (me) => {
 
-        //console.log("ME+++", me)
         if (me.uniqueIdentification) {
 
           let exsistingItem = await localMCountry.find(
@@ -232,10 +214,8 @@ export class AppService {
             ins.description = me.mrvInstitution;
 
             ins.country = me.countryId;
-            // ins.
             let n = await this.insRepository.insert(ins);
 
-            //item not found Insert
 
             if (me.userTypeId == 2) {
               me.id = null;
@@ -248,30 +228,23 @@ export class AppService {
 
           }
           else {
-            //item found Update;
             let id;
             let pass;
             let salt;
 
             if (me.userTypeId == 2) {
               await localMCountry.find((a) => { if (a.uniqueIdentification === me.uniqueIdentification) { id = a.id; pass=a.password; salt=a.salt } });
-              // console.log("ME=====", me)
-              // console.log(pass,salt)
-              let co= await this.countryRepository.findOne({where:{id:me.countryId}})
-              // console.log("ME=====", co)
-              let ins1 = await this.insRepository.findOne({ where: { country: co, type: null } })
-              console.log("ME=====", ins1) 
+             
+              let co= await this.countryRepository.findOne({where:{id:me.countryId}});
+              let ins1 = await this.insRepository.findOne({ where: { country: co, type: null } });
               me.id = id;
               me.userTypeId = "1";
                me.institution=ins1;
                me.password =pass;
                me.salt =salt;
-              console.log("ME+++", me)
              
-              //console.log('update user======', me.userTypeId);
               await this.userRepository.save(me);
             }
-            console.log('Update user');
 
           }
         }
@@ -289,13 +262,8 @@ export class AppService {
           );
 
           if (!exsistingItem) {
-            //item not found Insert
-            console.log('Insert sector');
-
             this.sectorRepository.save(me);
           } else {
-            //item found Update;
-            console.log('Update sector');
             this.sectorRepository.save(me);
           }
         }
@@ -313,13 +281,9 @@ export class AppService {
           );
 
           if (!exsistingItem) {
-            //item not found Insert
-            console.log('Insert applicability');
 
             this.applicabilityRepository.save(me);
           } else {
-            //item found Update;
-            console.log('Update applicability');
             this.applicabilityRepository.save(me);
           }
         }
@@ -337,13 +301,9 @@ export class AppService {
           );
 
           if (!exsistingItem) {
-            //item not found Insert
-            console.log('Insert mitigation-action');
 
             this.mitidationActionRepository.save(me);
           } else {
-            //item found Update;
-            console.log('Update mitigation-action');
             this.mitidationActionRepository.save(me);
           }
         }
@@ -353,24 +313,15 @@ export class AppService {
 
   async synclearningMeterial() {
     let localMCountry = await this.learningMeterialRepository.find();
-    // console.log("me===========", localMCountry)
     await this.getMetodlogyFromPMU('learning-material').subscribe(async (m) => {
       m.data.map((me) => {
-        // console.log("me===========", me)
         if (me.uniqueIdentification) {
           let exsistingItem = localMCountry.find(
             (a) => a.uniqueIdentification === me.uniqueIdentification,
           );
-          // console.log("me===========",me)
           if (!exsistingItem) {
-            //item not found Insert
-            // console.log('Insert learning Meterial');
-
             this.learningMeterialRepository.save(me);
           } else {
-            //item found Update;
-            // console.log('Update learning Meterial');
-            // console.log(me);
             this.learningMeterialRepository.save(me);
           }
         }
@@ -388,14 +339,8 @@ export class AppService {
           );
 
           if (!exsistingItem) {
-            //item not found Insert
-            // console.log('Insert learning Meterial Sector');
-
             this.learningMeterialSectorRepository.save(me);
           } else {
-            //item found Update;
-            // console.log('Update learning Meterial Sector');
-            // console.log(me);
             this.learningMeterialSectorRepository.save(me);
           }
         }
@@ -407,7 +352,6 @@ export class AppService {
     let localMCountry = await this.learningMeterialUserTypeRepository.find();
     await this.getMetodlogyFromPMU('learning-material/user-type').subscribe(async (m) => {
       m.data.map((me) => {
-        // console.log("me++++++++++,",me)
         if (me.uniqueIdentification) {
           let exsistingItem = localMCountry.find(
             (a) => a.uniqueIdentification === me.uniqueIdentification,
@@ -420,7 +364,6 @@ export class AppService {
             }
             if (me.userid == 6) {
               me.userType = 2;
-              console.log("me++++++++++,", me)
               this.learningMeterialUserTypeRepository.save(me);
             }
             if (me.userid == 7) {
@@ -451,8 +394,6 @@ export class AppService {
               me.userType = 9;
               this.learningMeterialUserTypeRepository.save(me);
             }
-            //item not found Insert
-            console.log('Insert learning Meterial Type');
 
 
           } else {
@@ -462,7 +403,6 @@ export class AppService {
             }
             if (me.userid == 6) {
               me.userType = 2;
-              console.log("me++++++++++,", me)
               this.learningMeterialUserTypeRepository.save(me);
             }
             if (me.userid == 7) {
@@ -493,7 +433,6 @@ export class AppService {
               me.userType = 9;
               this.learningMeterialUserTypeRepository.save(me);
             }
-            // this.learningMeterialUserTypeRepository.save(me);
           }
         }
       });
@@ -502,7 +441,6 @@ export class AppService {
 
   async syncMethodology() {
     let localMethodology = await this.methodologyRepository.find();
-    console.log('Insert--------');
     await this.getMetodlogyFromPMU('methodology').subscribe(async (m) => {
       m.data.map(async (me) => {
 
@@ -511,8 +449,6 @@ export class AppService {
             (a) => a.uniqueIdentification === me.uniqueIdentification,
           );
           if (!exsistingItem) {
-            //item not found Insert
-            console.log('Insert');
 
             me.baselineImage = me.method.baselineImage;
             me.projectImage = me.method.projectImage;
@@ -526,7 +462,6 @@ export class AppService {
             me.projectionImage = me.method.projectionImage;
             me.leakageImage = me.method.leakageImage;
             me.resultImage = me.method.resultImage;
-            console.log('Update', me.isActive);
             await this.methodologyRepository.save(me);
           }
         }
@@ -544,13 +479,8 @@ export class AppService {
           );
 
           if (!exsistingItem) {
-            //item not found Insert
-            console.log('Insert default-value');
-
             this.defaultValueRepository.insert(me);
           } else {
-            //item found Update;
-            console.log('Update default-value');
             this.defaultValueRepository.save(me);
           }
         }
@@ -568,13 +498,9 @@ export class AppService {
           );
 
           if (!exsistingItem) {
-            //item not found Insert
-            console.log('Insert unit-conversion');
 
             this.unitConversionRepository.insert(me);
           } else {
-            //item found Update;
-            console.log('Update unit-conversion');
             this.unitConversionRepository.save(me);
           }
         }
@@ -585,20 +511,16 @@ export class AppService {
   getMetodlogyFromPMU(name: string): Observable<AxiosResponse<any>> {
     try {
       let methodologuURL = this.pmuBaseURl + name;
-      console.log("==========", (methodologuURL))
       return this.httpService.get(methodologuURL);
     } catch (e) {
-      console.log('calculation Engine error', e);
     }
   }
 
   getMetodlogyFromCalEngine(name: string): Observable<AxiosResponse<any>> {
     try {
       let methodologuURL = this.calEngineBaseURl + name;
-      console.log("==========", (methodologuURL))
       return this.httpService.get(methodologuURL);
     } catch (e) {
-      console.log('calculation Engine error', e);
     }
   }
 }
