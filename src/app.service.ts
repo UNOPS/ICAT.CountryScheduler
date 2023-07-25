@@ -24,10 +24,8 @@ import { CountrySector } from './entity/country-sector.entity';
 @Injectable()
 export class AppService {
   private readonly logger = new Logger(AppService.name);
-  // private readonly pmuBaseURl = 'http://localhost:7081/';
-  // private readonly calEngineBaseURl = 'http://localhost:3600/';
-  private readonly pmuBaseURl = 'https://icat-ca-tool.climatesi.com/pmu-api/';
-  private readonly calEngineBaseURl = 'http://13.233.122.62:3600/';
+  private readonly pmuBaseURl = process.env.PMU_BASE_URL;
+  private readonly calEngineBaseURl = process.env.CAL_ENGINE_BASE_URL;
 
   /**
    *
