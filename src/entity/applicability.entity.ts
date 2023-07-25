@@ -1,4 +1,4 @@
-import { Column, Entity } from 'typeorm';
+import { Column, Entity} from 'typeorm';
 import { MasterData } from './base/master.data.entity';
 
 @Entity('applicability')
@@ -7,5 +7,6 @@ export class Applicability extends MasterData {
   uniqueIdentification: string;
 
   @Column({ default: null })
-  assessmentId: string;
+  assessmentId:string;
+
 }

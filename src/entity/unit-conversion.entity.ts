@@ -1,26 +1,31 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    PrimaryColumn,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import { BaseTrackingEntity } from './base/base.tracking.entity';
 
 @Entity({ name: 'unit_conversion' })
 export class UnitConversion extends BaseTrackingEntity {
-  constructor() {
-    super();
-    this.createdBy = '';
-    this.editedBy = '';
-  }
+    constructor() {
+        super();
+        this.createdBy = '';
+        this.editedBy = '';
+    }
 
-  @PrimaryGeneratedColumn()
-  id: number;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column({ nullable: false })
-  fromUnit: string;
+    @Column({ nullable: false })
+    fromUnit: string;
 
-  @Column({ nullable: false })
-  toUnit: string;
+    @Column({ nullable: false })
+    toUnit: string;
 
-  @Column({ nullable: false })
-  conversionFactor: number;
+    @Column({ nullable: false })
+    conversionFactor: number;
 
-  @Column({ default: null })
-  uniqueIdentification: string;
+    @Column({ default: null })
+    uniqueIdentification: string;
 }

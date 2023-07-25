@@ -1,1 +1,3 @@
-export class InstitutionDto {}
+export class InstitutionDto {
+    
+}

@@ -1,66 +1,80 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Applicability } from './applicability.entity';
 
 import { BaseTrackingEntity } from './base/base.tracking.entity';
+import { Country } from './contry.entity';
 import { MitigationAction } from './mitigation-action.entity';
 import { Sector } from './sector.entity';
 
 @Entity()
 export class MethodologyData extends BaseTrackingEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
 
-  @Column()
-  version: string;
+    @PrimaryGeneratedColumn()
+    id: number;
 
-  @Column()
-  name: string;
+    @Column()
+    version: string;
 
-  @Column({ default: null })
-  displayName: string;
+    @Column()
+    name: string;
 
-  @Column()
-  developedBy: string;
+    @Column({ default: null })
+    displayName: string;
 
-  @Column({ default: null })
-  parentId: number;
+    @Column()
+    developedBy: string;
 
-  @Column({ default: null })
-  applicableSector: string;
+    @Column({ default: null })
+    parentId: number;
 
-  @Column()
-  documents: string;
+    @Column({ default: null })
+    applicableSector: string;
 
-  @Column({ default: null })
-  easenessOfDataCollection: string;
+    @Column()
+    documents: string;
 
-  @Column({ default: null })
-  transportSubSector: string;
+    @Column({ default: null })
+    easenessOfDataCollection: string;
 
-  @Column({ default: null })
-  upstream_downstream: string;
+    @Column({ default: null })
+    transportSubSector: string;
 
-  @Column({ default: null })
-  ghgIncluded: string;
+    @Column({ default: null })
+    upstream_downstream: string;
 
-  @Column({ default: null })
-  uniqueIdentification: string;
+    @Column({ default: null })
+    ghgIncluded: string;
 
-  @ManyToOne((type) => Sector, { cascade: false })
-  @JoinColumn({ name: 'sectorId' })
-  sector?: Sector;
+    @Column({ default: null })
+    uniqueIdentification: string;
 
-  @ManyToOne((type) => MitigationAction, { cascade: false })
-  @JoinColumn({ name: 'mitigationActionTypeId' })
-  mitigationActionType?: MitigationAction;
+    @ManyToOne((type) => Sector, { cascade: false })
+    @JoinColumn({ name: 'sectorId' })
+    sector?: Sector;
 
-  @ManyToOne((type) => Applicability, { cascade: false })
-  @JoinColumn({ name: 'applicabilityId' })
-  applicability?: Applicability;
+    @ManyToOne((type) => MitigationAction, { cascade: false })
+    @JoinColumn({ name: 'mitigationActionTypeId' })
+    mitigationActionType?: MitigationAction;
+
+    @ManyToOne((type) => Applicability, { cascade: false })
+    @JoinColumn({ name: 'applicabilityId' })
+    applicability?: Applicability;
+
+    
+    @Column({ default: null })
+    baselineImage: string;
+
+    @Column({ default: null })
+    projectImage: string;
+
+    @Column({ default: null })
+    projectionImage: string;
+
+    @Column({ default: null })
+    leakageImage: string;
+
+    @Column({ default: null })
+    resultImage: string;
+
 }

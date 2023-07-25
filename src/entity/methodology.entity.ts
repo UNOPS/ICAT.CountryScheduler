@@ -2,7 +2,10 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Applicability } from './applicability.entity';
@@ -43,8 +46,8 @@ export class Methodology extends BaseTrackingEntity {
   applicableSector: string;
 
   @Column({ default: null })
-  Documents: string;
-
+  documents: string;
+  
   @Column({ default: 0 })
   isActive: number;
 
@@ -71,15 +74,35 @@ export class Methodology extends BaseTrackingEntity {
   @JoinColumn({ name: 'countryId' })
   country?: Country;
 
+  
+
   @ManyToOne((type) => Sector, { cascade: false })
   @JoinColumn({ name: 'sectorId' })
   sector?: Sector;
 
+  
   @ManyToOne((type) => Applicability, { cascade: false })
   @JoinColumn({ name: 'applicabilityId' })
   applicability?: Applicability;
 
+
   @ManyToOne((type) => MethodologyData, { cascade: false })
   @JoinColumn({ name: 'methodId' })
   method?: MethodologyData;
+
+  
+  @Column({ default: null })
+  baselineImage: string;
+
+  @Column({ default: null })
+  projectImage: string;
+
+  @Column({ default: null })
+  projectionImage: string;
+
+  @Column({ default: null })
+  leakageImage: string;
+
+  @Column({ default: null })
+  resultImage: string;
 }

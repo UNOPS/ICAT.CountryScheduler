@@ -1,15 +1,18 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+
+import {Column,Entity,PrimaryGeneratedColumn,OneToMany} from 'typeorm';
 import { BaseTrackingEntity } from './base/base.tracking.entity';
+import { CountrySector } from './country-sector.entity';
 import { countryStatus } from './country-status.entity';
 
-@Entity({ name: 'country' })
-export class Country extends BaseTrackingEntity {
+@Entity({name: 'country'})
+export class Country extends BaseTrackingEntity{
+
   constructor() {
     super();
     this.createdBy = '';
     this.editedBy = '';
   }
-
+    
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,14 +31,14 @@ export class Country extends BaseTrackingEntity {
   @Column({ default: 1 })
   sortOrder: number;
 
-  @Column()
-  submissions: string;
+  // @Column()
+  // submissions: string; // add as string for document upload 
 
-  @Column({ default: null })
-  emissionSummary: string;
+  // @Column({ default: null })
+  // emissionSummary: string;
 
-  @Column({ default: null })
-  ndcDocuments: string;
+  // @Column({ default: null })
+  // ndcDocuments: string;
 
   @Column({ default: null })
   isSystemUse: boolean;
@@ -46,10 +49,14 @@ export class Country extends BaseTrackingEntity {
   @Column({ default: null })
   registeredDate: Date;
 
+  
   @Column({ default: null })
   isMember: boolean;
 
-  @Column({ default: null })
+ // @Column({ default: null })
+ // isRegister: boolean;
+
+  @Column({ default: null })  // enum 
   countryStatus: countryStatus;
 
   @Column({ default: null })
@@ -68,5 +75,12 @@ export class Country extends BaseTrackingEntity {
   dataCollectionModule: boolean;
 
   @Column({ default: null })
+  dataCollectionGhgModule: boolean;
+
+  @Column({ default: null })
   uniqueIdentification: string;
+
+
+  @OneToMany(() => CountrySector, countrySector => countrySector.country,{eager:true})
+  countrysector: CountrySector[];
 }

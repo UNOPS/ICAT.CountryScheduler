@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller('')
@@ -10,22 +10,27 @@ export class AppController {
     return this.appService.getHello();
   }
   @Get('methodology')
-  manualSyncMethodology() {
+  manualSyncMethodology(){
     this.appService.manualSynMethod();
   }
 
   @Get('lerninigMeterial')
-  manualSynclerninigMeterial() {
+  manualSynclerninigMeterial(){
     this.appService.manualSynLerningMeterial();
   }
 
   @Get('country')
-  manualSynclerninigCountry() {
+  manualSynclerninigCountry(){
     this.appService.manualSynCountry();
   }
 
+  @Get('country1')
+  syncSectorCountry(){
+    this.appService.syncSectorCountry();
+  }
+
   @Get('user')
-  manualSyncUser() {
+  manualSyncUser(){
     this.appService.manualSynUser();
   }
 }
