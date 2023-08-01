@@ -22,8 +22,6 @@ import { UnitConversion } from './entity/unit-conversion.entity';
 import { User } from './entity/user.entity';
 import { UserType } from './entity/user.type.entity';
 
-// https://docs.nestjs.com/techniques/task-scheduling
-
 @Module({
   imports: [
     ScheduleModule.forRoot(),
