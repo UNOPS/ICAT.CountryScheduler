@@ -35,9 +35,6 @@ export class User extends BaseTrackingEntity {
     @JoinColumn()
     institution: Institution;
 
-    // @OneToMany(() => Assessment, assessment => assessment.user)
-    //   assessments: Assessment[];
-
     @Column()
     telephone: string;
 
@@ -55,15 +52,12 @@ export class User extends BaseTrackingEntity {
     @JoinColumn({ name: 'countryId' })
     country: Country;
 
-    // @Exclude()
     @Column()
     salt: string;
 
-    // @Exclude()
     @Column()
     password: string;
 
-    // @Exclude()
     @Column()
     resetToken: string;
 
