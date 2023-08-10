@@ -26,8 +26,11 @@ $ npm install --force
 
 5. Set up the Environment Variables
 
-   - **Windows:** using the `set` command in the terminal
-   - **Linux/MacOS:** using the `export` command in the terminal
+   - In the machine:
+      - **Windows:** using the `set` command in the terminal
+      - **Linux/MacOS:** using the `export` command in the terminal
+
+   - Or creating a `.env` file using `.env.example` as base
 
 6. Run the app:
 
@@ -78,13 +81,17 @@ The environment variables should be declared as follow:
 
 | Variable name         | Description                |
 | --------------------- | -------------------------- |
-| `SOCKET_PATH`         | Database Socket Path       |
+| `PORT`                | Application Port           |
+| `DATABASE_HOST`       | Database Host(*)           |
+| `SOCKET_PATH`         | Database Socket Path(*)    |
 | `DATABASE_PORT`       | Database Port              |
 | `DATABASE_USER`       | Database Socket User       |
 | `DATABASE_PASSWORD`   | Database Password          |
 | `DATABASE_NAME`       | Database Name              |
 | `PMU_BASE_URL`        | PMU Portal Service API URL |
 | `CAL_ENGINE_BASE_URL` | Calculation Engine API URL |
+
+> (*) Can be used the Database Host or the Database Socket Path depending of the database configuration
 
 ## Dependencies
 
