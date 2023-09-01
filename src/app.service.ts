@@ -210,7 +210,7 @@ export class AppService {
             let ins = new Institution();
             ins.name = me.mrvInstitution;
             ins.description = me.mrvInstitution;
-
+            ins.sectorId = me.sectorId;
             ins.country = me.countryId;
             let n = await this.insRepository.insert(ins);
 
