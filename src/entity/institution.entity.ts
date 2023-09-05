@@ -73,7 +73,7 @@ export class Institution extends BaseTrackingEntity {
   @JoinColumn()
   country: Country;
 
-  @Column()
+  @Column({default:null,nullable:true})
   telephoneNumber: string;
 
   @Column({ length: 30, default: null, nullable: true })
