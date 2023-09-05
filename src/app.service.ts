@@ -213,6 +213,7 @@ export class AppService {
             ins.name = me.mrvInstitution;
             ins.description = me.mrvInstitution;
             ins.telephoneNumber='';
+            ins.sectorId = 0;
             
 
             ins.country = me.countryId;
