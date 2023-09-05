@@ -21,6 +21,7 @@ import { MethodologyData } from './entity/methodology-data.entity';
 import { CountrySector } from './entity/country-sector.entity';
 
 
+
 @Injectable()
 export class AppService {
   private readonly logger = new Logger(AppService.name);
@@ -103,14 +104,14 @@ export class AppService {
     
   }
 
-  async manualSynUser() {
+  async manualSynUser() {  
     await this.syncUser();
   }
 
 
   async syncCountry() {
     let localMCountry = await this.countryRepository.find();
-    await this.getMetodlogyFromPMU('country').subscribe(async (m) => {
+    await this.getMetodlogyFromPMU('country').subscribe(async (m) => {  
       m.data.map((me) => {
 
         if (me.uniqueIdentification) {
@@ -198,7 +199,7 @@ export class AppService {
     this.getMetodlogyFromPMU('users/findUserBy').subscribe(async (m) => {
       m.data.map(async (me) => {
 
-        if (me.uniqueIdentification) {
+        if (me.uniqueIdentification) { 
 
           let exsistingItem = await localMCountry.find(
             (a) => a.uniqueIdentification === me.uniqueIdentification
@@ -210,6 +211,8 @@ export class AppService {
             let ins = new Institution();
             ins.name = me.mrvInstitution;
             ins.description = me.mrvInstitution;
+            ins.telephoneNumber='';
+            
 
             ins.country = me.countryId;
             let n = await this.insRepository.insert(ins);
@@ -508,9 +511,10 @@ export class AppService {
 
   getMetodlogyFromPMU(name: string): Observable<AxiosResponse<any>> {
     try {
-      let methodologuURL = this.pmuBaseURl + name;
+      let methodologuURL = this.pmuBaseURl + name;  
       return this.httpService.get(methodologuURL);
     } catch (e) {
+      console.log(e)
     }
   }
 
