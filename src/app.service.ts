@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AxiosResponse } from 'axios';
@@ -19,6 +19,7 @@ import { User } from './entity/user.entity';
 import { Institution } from './entity/institution.entity';
 import { MethodologyData } from './entity/methodology-data.entity';
 import { CountrySector } from './entity/country-sector.entity';
+
 
 
 
@@ -250,6 +251,8 @@ export class AppService {
           }
         }
       });
+    },error=>{
+      throw new InternalServerErrorException(error)
     });
   }
 
