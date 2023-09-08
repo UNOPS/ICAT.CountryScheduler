@@ -31,6 +31,7 @@ export class Country extends BaseTrackingEntity{
   @Column({ default: 1 })
   sortOrder: number;
 
+<<<<<<< HEAD
   // @Column()
   // submissions: string; // add as string for document upload 
 
@@ -40,6 +41,8 @@ export class Country extends BaseTrackingEntity{
   // @Column({ default: null })
   // ndcDocuments: string;
 
+=======
+>>>>>>> 568203418a342b307da4884990a5f977cfff5617
   @Column({ default: null })
   isSystemUse: boolean;
 
@@ -48,7 +51,10 @@ export class Country extends BaseTrackingEntity{
 
   @Column({ default: null })
   registeredDate: Date;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 568203418a342b307da4884990a5f977cfff5617
   
   @Column({ default: null })
   isMember: boolean;

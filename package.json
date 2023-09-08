@@ -29,6 +29,10 @@
     "@nestjs/swagger": "^5.2.0",
     "@nestjs/typeorm": "^8.0.3",
     "axios": "^0.26.1",
+<<<<<<< HEAD
+=======
+    "dotenv":"16.3.1",
+>>>>>>> 568203418a342b307da4884990a5f977cfff5617
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

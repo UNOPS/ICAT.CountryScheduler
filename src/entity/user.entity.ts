@@ -35,6 +35,7 @@ export class User extends BaseTrackingEntity {
     @JoinColumn()
     institution: Institution;
 
+<<<<<<< HEAD
     // @OneToMany(() => Assessment, assessment => assessment.user)
     //   assessments: Assessment[];
 
@@ -73,6 +74,40 @@ export class User extends BaseTrackingEntity {
     @Column({ default: 0 })
     canNotDelete?: boolean;
 
+=======
+    @Column()
+    telephone: string;
+
+    @Column()
+    mobile: string;
+
+    @Column({ nullable: true })
+    designation: string;
+
+
+    @Column({ name: 'countryId' })
+    countryId: number;
+
+    @ManyToOne((type) => Country, { cascade: false })
+    @JoinColumn({ name: 'countryId' })
+    country: Country;
+
+    @Column()
+    salt: string;
+
+    @Column()
+    password: string;
+
+    @Column()
+    resetToken: string;
+
+    @Column()
+    deletedAt?: Date;
+
+    @Column({ default: 0 })
+    canNotDelete?: boolean;
+
+>>>>>>> 568203418a342b307da4884990a5f977cfff5617
     fullName: string;
 
     @Column({ default: null })

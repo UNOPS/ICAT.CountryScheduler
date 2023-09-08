@@ -4,7 +4,7 @@ Backend service for ICAT Climate Action Assessment Tool for Transport Sector - T
 
 Supported by [Initiative for Climate Action Transparency - ICAT](https://climateactiontransparency.org/).
 
-Built using [Node.js 18](https://nodejs.org/dist/latest-v18.x/docs/api/) and [Nest](https://github.com/nestjs/nest) framework.
+Built using [Node.js 16](https://nodejs.org/dist/latest-v16.x/docs/api/) and [Nest](https://github.com/nestjs/nest) framework.
 
 ## Database Configuration
 
@@ -12,7 +12,7 @@ This application uses a [MySQL Database](https://www.mysql.com/). The `ICAT-coun
 
 ## Manual Installation
 
-1. Download and install the [Node.js 18 LTS version](https://nodejs.org/en/download) for your operational system.
+1. Download and install the [Node.js 16 LTS version](https://nodejs.org/en/download/releases) for your operational system.
 
 2. Download or clone this repository.
 
@@ -26,8 +26,11 @@ $ npm install --force
 
 5. Set up the Environment Variables
 
-   - **Windows:** using the `set` command in the terminal
-   - **Linux/MacOS:** using the `export` command in the terminal
+   - In the machine:
+      - **Windows:** using the `set` command in the terminal
+      - **Linux/MacOS:** using the `export` command in the terminal
+
+   - Or creating a `.env` file using `.env.example` as base
 
 6. Run the app:
 
@@ -78,13 +81,17 @@ The environment variables should be declared as follow:
 
 | Variable name         | Description                |
 | --------------------- | -------------------------- |
-| `SOCKET_PATH`         | Database Socket Path       |
+| `PORT`                | Application Port           |
+| `DATABASE_HOST`       | Database Host(*)           |
+| `SOCKET_PATH`         | Database Socket Path(*)    |
 | `DATABASE_PORT`       | Database Port              |
 | `DATABASE_USER`       | Database Socket User       |
 | `DATABASE_PASSWORD`   | Database Password          |
 | `DATABASE_NAME`       | Database Name              |
 | `PMU_BASE_URL`        | PMU Portal Service API URL |
 | `CAL_ENGINE_BASE_URL` | Calculation Engine API URL |
+
+> (*) Can be used the Database Host or the Database Socket Path depending of the database configuration
 
 ## Dependencies
 
@@ -93,7 +100,7 @@ This application consumes data from CalculationEngine and PMUPortalService appli
 The complete dependency diagram of TraCAD Country and PMU applications:
 
 <p align="left">
-  <img src="https://lucid.app/publicSegments/view/9a6fb822-be5a-47d7-ad67-0434a4025234/image.png" width="800" alt="TraCAD Diagram" /></a>
+  <img src="https://lucid.app/publicSegments/view/7e56ab6c-3c14-428b-be1d-63dfd33760be/image.png" width="800" alt="TraCAD Diagram" /></a>
 </p>
 
 ## License
