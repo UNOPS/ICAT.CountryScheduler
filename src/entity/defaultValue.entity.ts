@@ -1,7 +1,7 @@
 
 import { Column, Entity, PrimaryGeneratedColumn,ManyToOne ,JoinColumn} from 'typeorm';
 import { BaseTrackingEntity } from './base/base.tracking.entity';
-import { Country } from './contry.entity';
+import { Country } from './country.entity';
 
 @Entity()
 export class DefaultValue extends BaseTrackingEntity {

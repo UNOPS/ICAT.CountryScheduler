@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Applicability } from './entity/applicability.entity';
-import { Country } from './entity/contry.entity';
+import { Country } from './entity/country.entity';
 import { CountrySector } from './entity/country-sector.entity';
 import { DefaultValue } from './entity/defaultValue.entity';
 import { InstitutionCategory } from './entity/institition.catagory.entity';
@@ -21,8 +21,6 @@ import { Sector } from './entity/sector.entity';
 import { UnitConversion } from './entity/unit-conversion.entity';
 import { User } from './entity/user.entity';
 import { UserType } from './entity/user.type.entity';
-
-// https://docs.nestjs.com/techniques/task-scheduling
 
 @Module({
   imports: [
