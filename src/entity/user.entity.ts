@@ -1,6 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseTrackingEntity } from "./base/base.tracking.entity";
-import { Country } from './contry.entity';
+import { Country } from './country.entity';
 import { Institution } from './institution.entity';
 import { UserType } from './user.type.entity';
 

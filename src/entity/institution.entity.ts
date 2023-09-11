@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { BaseTrackingEntity } from './base/base.tracking.entity';
-import { Country } from './contry.entity';
+import { Country } from './country.entity';
 import { InstitutionCategory } from './institition.catagory.entity';
 import { InstitutionType } from './institution.typr.entity';
 import { Sector } from './sector.entity';

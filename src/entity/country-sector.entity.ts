@@ -1,7 +1,7 @@
 
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { BaseTrackingEntity } from "./base/base.tracking.entity";
-import { Country } from "./contry.entity";
+import { Country } from "./country.entity";
 import { Sector } from "./sector.entity";
 
 @Entity({ name: 'country_sector' })

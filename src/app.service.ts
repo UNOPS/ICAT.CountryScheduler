@@ -6,7 +6,7 @@ import { AxiosResponse } from 'axios';
 import { Observable, timeout } from 'rxjs';
 import { Repository } from 'typeorm';
 import { Applicability } from './entity/applicability.entity';
-import { Country } from './entity/contry.entity';
+import { Country } from './entity/country.entity';
 import { DefaultValue } from './entity/defaultValue.entity';
 import { LearningMaterialSector } from './entity/learning-material-sector.entity';
 import { LearningMaterialUserType } from './entity/learning-material-usertype.entity';
@@ -516,7 +516,6 @@ export class AppService {
       let methodologuURL = this.pmuBaseURl + name;  
       return this.httpService.get(methodologuURL);
     } catch (e) {
-      console.log(e)
     }
   }
 

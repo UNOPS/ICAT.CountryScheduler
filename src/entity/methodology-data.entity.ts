@@ -3,7 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 't
 import { Applicability } from './applicability.entity';
 
 import { BaseTrackingEntity } from './base/base.tracking.entity';
-import { Country } from './contry.entity';
+import { Country } from './country.entity';
 import { MitigationAction } from './mitigation-action.entity';
 import { Sector } from './sector.entity';
 
