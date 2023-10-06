@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Applicability } from './entity/applicability.entity';
-import { Country } from './entity/contry.entity';
+import { Country } from './entity/country.entity';
 import { CountrySector } from './entity/country-sector.entity';
 import { DefaultValue } from './entity/defaultValue.entity';
 import { InstitutionCategory } from './entity/institition.catagory.entity';
@@ -29,11 +29,16 @@ import { UserType } from './entity/user.type.entity';
     ScheduleModule.forRoot(),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      socketPath: process.env.SOCKET_PATH,
-      port: Number(process.env.DATABASE_PORT),
-      username: process.env.DATABASE_USER,
-      password: process.env.DATABASE_PASSWORD,
-      database: process.env.DATABASE_NAME,
+      host: 'localhost',
+  port: 3306,
+  username: 'root',
+  password: 'pradeep123#',
+  database: 'portelservice',
+      // socketPath: process.env.SOCKET_PATH,
+      // port: Number(process.env.DATABASE_PORT),
+      // username: process.env.DATABASE_USER,
+      // password: process.env.DATABASE_PASSWORD,
+      // database: process.env.DATABASE_NAME,
       entities: [
         Applicability,
         Country,

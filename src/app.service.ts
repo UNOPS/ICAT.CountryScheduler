@@ -6,7 +6,7 @@ import { AxiosResponse } from 'axios';
 import { Observable, timeout } from 'rxjs';
 import { Repository } from 'typeorm';
 import { Applicability } from './entity/applicability.entity';
-import { Country } from './entity/contry.entity';
+import { Country } from './entity/country.entity';
 import { DefaultValue } from './entity/defaultValue.entity';
 import { LearningMaterialSector } from './entity/learning-material-sector.entity';
 import { LearningMaterialUserType } from './entity/learning-material-usertype.entity';
@@ -19,6 +19,7 @@ import { User } from './entity/user.entity';
 import { Institution } from './entity/institution.entity';
 import { MethodologyData } from './entity/methodology-data.entity';
 import { CountrySector } from './entity/country-sector.entity';
+import e from 'express';
 
 
 
@@ -26,7 +27,7 @@ import { CountrySector } from './entity/country-sector.entity';
 @Injectable()
 export class AppService {
   private readonly logger = new Logger(AppService.name);
-  private readonly pmuBaseURl = process.env.PMU_BASE_URL;
+  private readonly pmuBaseURl = 'http://localhost:7080/';
   private readonly calEngineBaseURl = process.env.CAL_ENGINE_BASE_URL;
 
   /**
@@ -67,7 +68,7 @@ export class AppService {
 
   getHello(): string {
     return 'Hello World!';
-    
+
   }
 
   @Cron('* * 23 * * *')
@@ -99,20 +100,46 @@ export class AppService {
 
   async manualSynCountry() {
     await this.syncCountry();
-    setTimeout(async () =>{
+    setTimeout(async () => {
       await this.syncSectorCountry();
-    },1000)
-    
+    }, 1000)
+
   }
 
-  async manualSynUser() {  
+  async manualSynUser() {
     await this.syncUser();
+  }
+
+  async manualSynUserOne(dto: any) {
+    let exsistingItem = await this.userRepository.findOne({ where: { uniqueIdentification: dto.uniqueIdentification } });
+    if (!exsistingItem) {
+      let ins = new Institution();
+      ins.name = dto.mrvInstitution;
+      ins.description = dto.mrvInstitution;
+      ins.telephoneNumber = '';
+      ins.sectorId = 0;
+      ins.country = dto.countryId;
+      let n = await this.insRepository.insert(ins);
+      if (dto.userType.id == 2) {
+        dto.id = null;
+        dto.userTypeId = "1";
+        dto.institutionId = n.identifiers[0].id;
+        await this.userRepository.insert(dto);
+      }
+    }
+    else {      
+      if (dto.userType.id  == 2 && exsistingItem.countryId==dto.country.id ) {       
+        exsistingItem.status =dto.status;
+        await this.userRepository.save(exsistingItem);
+      }
+
+    }
   }
 
 
   async syncCountry() {
     let localMCountry = await this.countryRepository.find();
-    await this.getMetodlogyFromPMU('country').subscribe(async (m) => {  
+    await this.getMetodlogyFromPMU('country').subscribe(async (m) => {
       m.data.map((me) => {
 
         if (me.uniqueIdentification) {
@@ -130,37 +157,37 @@ export class AppService {
       });
     });
 
-    
+
   }
 
   async syncSectorCountry() {
     let localMCountrySector = await this.countrySectorRepository.find();
-    let Pmu :any;
-    let sec:any;
+    let Pmu: any;
+    let sec: any;
 
+    await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
+      Pmu = m.data;
+
+      sec = await localMCountrySector.filter((a) => !Pmu.some((b) => a.uniqueIdentification == b.uniqueIdentification));
+
+      if (sec.length > 0) {
+        sec.forEach((a) => this.countrySectorRepository.delete(a.id));
+      }
+    });
+
+
+
+    setTimeout(async () => {
       await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
-        Pmu =m.data;
-  
-        sec =await localMCountrySector.filter((a) => !Pmu.some((b) => a.uniqueIdentification == b.uniqueIdentification));
-      
-        if(sec.length>0){
-          sec.forEach((a) => this.countrySectorRepository.delete(a.id));
-         }
-      });
-
-      
-   
-    setTimeout(async () =>{
-       await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
         m.data.map(async (me) => {
-  
-          if (me.uniqueIdentification !=null && me.uniqueIdentification.length>5)  {
+
+          if (me.uniqueIdentification != null && me.uniqueIdentification.length > 5) {
             let exsistingItem = localMCountrySector.find(
               (a) => a.uniqueIdentification === me.uniqueIdentification,
             );
-  
+
             if (!exsistingItem) {
-  
+
               await this.countrySectorRepository.save(me);
             } else {
               await this.countrySectorRepository.save(me);
@@ -168,10 +195,10 @@ export class AppService {
           }
         });
       });
-    },5000)
-   
+    }, 5000)
 
-   
+
+
 
   }
 
@@ -200,7 +227,7 @@ export class AppService {
     this.getMetodlogyFromPMU('users/findUserBy').subscribe(async (m) => {
       m.data.map(async (me) => {
 
-        if (me.uniqueIdentification) { 
+        if (me.uniqueIdentification) {
 
           let exsistingItem = await localMCountry.find(
             (a) => a.uniqueIdentification === me.uniqueIdentification
@@ -212,7 +239,7 @@ export class AppService {
             let ins = new Institution();
             ins.name = me.mrvInstitution;
             ins.description = me.mrvInstitution;
-            ins.telephoneNumber='';
+            ins.telephoneNumber = '';
             ins.sectorId = 0;
             ins.country = me.countryId;
             let n = await this.insRepository.insert(ins);
@@ -234,23 +261,25 @@ export class AppService {
             let salt;
 
             if (me.userTypeId == 2) {
-              await localMCountry.find((a) => { if (a.uniqueIdentification === me.uniqueIdentification) { id = a.id; pass=a.password; salt=a.salt } });
-             
-              let co= await this.countryRepository.findOne({where:{id:me.countryId}});
+              await localMCountry.find((a) => { if (a.uniqueIdentification === me.uniqueIdentification) { id = a.id; pass = a.password; salt = a.salt } });
+
+              let co = await this.countryRepository.findOne({ where: { id: me.countryId } });
               let ins1 = await this.insRepository.findOne({ where: { country: co, type: null } });
               me.id = id;
               me.userTypeId = "1";
-               me.institution=ins1;
-               me.password =pass;
-               me.salt =salt;
-             
+              me.institution = ins1;
+              me.password = pass;
+              me.salt = salt;
+
               await this.userRepository.save(me);
             }
 
           }
         }
-      });
-    },error=>{
+      })
+
+        ;
+    }, error => {
       throw new InternalServerErrorException(error)
     });
   }
@@ -513,7 +542,7 @@ export class AppService {
 
   getMetodlogyFromPMU(name: string): Observable<AxiosResponse<any>> {
     try {
-      let methodologuURL = this.pmuBaseURl + name;  
+      let methodologuURL = this.pmuBaseURl + name;
       return this.httpService.get(methodologuURL);
     } catch (e) {
     }
