@@ -127,9 +127,9 @@ export class AppService {
         await this.userRepository.insert(dto);
       }
     }
-    else {      
-      if (dto.userType.id  == 2 && exsistingItem.countryId==dto.country.id ) {       
-        exsistingItem.status =dto.status;
+    else {
+      if (dto.userType.id == 2 && exsistingItem.countryId == dto.country.id) {
+        exsistingItem.status = dto.status;
         await this.userRepository.save(exsistingItem);
       }
 
