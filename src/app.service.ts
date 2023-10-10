@@ -27,7 +27,7 @@ import e from 'express';
 @Injectable()
 export class AppService {
   private readonly logger = new Logger(AppService.name);
-  private readonly pmuBaseURl = 'http://localhost:7080/';
+  private readonly pmuBaseURl = process.env.PMU_BASE_URL;
   private readonly calEngineBaseURl = process.env.CAL_ENGINE_BASE_URL;
 
   /**
