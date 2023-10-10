@@ -20,8 +20,13 @@ export class AppController {
   }
 
   @Get('country')
-  manualSynclerninigCountry(){
+  manualSyncCountry(){
     this.appService.manualSynCountry();
+  }
+
+  @Post('countryone')
+  async manualSyncCountryOne(@Body() dto: any,): Promise<any>{
+    this.appService.manualSynCountryOne(dto);
   }
 
   @Get('country1')

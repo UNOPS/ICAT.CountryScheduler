@@ -102,12 +102,52 @@ export class AppService {
     await this.syncCountry();
     setTimeout(async () => {
       await this.syncSectorCountry();
-    }, 1000)
+    }, 5000)
+
+  }
+
+
+  async manualSynCountryOne(dto: any) {
+    await this.SynCountryOne(dto);
+    setTimeout(async () => {
+      await this.syncSectorCountryOne(dto.id);
+    }, 5000)
 
   }
 
   async manualSynUser() {
     await this.syncUser();
+  }
+
+  async SynCountryOne(dto: any) {
+    let exsistingItem = await this.countryRepository.findOne({ where: { uniqueIdentification: dto.uniqueIdentification } });
+    if (!exsistingItem) {
+      await this.countryRepository.save(dto);
+    }
+    else {
+      if (exsistingItem.id == dto.id) {
+        exsistingItem.status = dto.status;
+        exsistingItem.dataCollectionGhgModule = dto.dataCollectionGhgModule;
+        exsistingItem.dataCollectionModule = dto.dataCollectionModule;
+        exsistingItem.ghgModule = dto.ghgModule;
+        exsistingItem.isMember = dto.isMember;
+        exsistingItem.isSystemUse = dto.isSystemUse;
+        exsistingItem.macModule = dto.macModule;
+        await this.countryRepository.save(exsistingItem);
+      }
+
+    }
+  }
+
+  async syncSectorCountryOne(id: number) {
+    let localMCountrySector = await this.countrySectorRepository.find({ where: { countryId: id } });
+    let Pmu: any;
+
+    await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
+      Pmu = m.data.filter((a) => a.countryId == id);
+      localMCountrySector.forEach(async (a) => await this.countrySectorRepository.delete(a.id));
+      Pmu.forEach(async (a) => await this.countrySectorRepository.insert(a));
+    });
   }
 
   async manualSynUserOne(dto: any) {
