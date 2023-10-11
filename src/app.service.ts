@@ -21,18 +21,12 @@ import { MethodologyData } from './entity/methodology-data.entity';
 import { CountrySector } from './entity/country-sector.entity';
 import e from 'express';
 
-
-
-
 @Injectable()
 export class AppService {
   private readonly logger = new Logger(AppService.name);
   private readonly pmuBaseURl = process.env.PMU_BASE_URL;
   private readonly calEngineBaseURl = process.env.CAL_ENGINE_BASE_URL;
 
-  /**
-   *
-   */
   constructor(
     @InjectRepository(Methodology)
     private readonly methodologyRepository: Repository<Methodology>,
@@ -79,7 +73,6 @@ export class AppService {
     await this.syncSector();
     await this.syncApplicability();
     await this.syncMAction();
-
     await this.syncDefaultValue();
     await this.syncUnitConversion();
   }
@@ -102,12 +95,51 @@ export class AppService {
     await this.syncCountry();
     setTimeout(async () => {
       await this.syncSectorCountry();
-    }, 1000)
+    }, 5000)
+
+  }
+
+
+  async manualSynCountryOne(dto: any) {
+    await this.SynCountryOne(dto);
+    setTimeout(async () => {
+      await this.syncSectorCountryOne(dto.id);
+    }, 5000)
 
   }
 
   async manualSynUser() {
     await this.syncUser();
+  }
+
+  async SynCountryOne(dto: any) {
+    let exsistingItem = await this.countryRepository.findOne({ where: { uniqueIdentification: dto.uniqueIdentification } });
+    if (!exsistingItem) {
+      await this.countryRepository.save(dto);
+    }
+    else {
+      if (exsistingItem.id == dto.id) {
+        exsistingItem.status = dto.status;
+        exsistingItem.dataCollectionGhgModule = dto.dataCollectionGhgModule;
+        exsistingItem.dataCollectionModule = dto.dataCollectionModule;
+        exsistingItem.ghgModule = dto.ghgModule;
+        exsistingItem.isMember = dto.isMember;
+        exsistingItem.isSystemUse = dto.isSystemUse;
+        exsistingItem.macModule = dto.macModule;
+        await this.countryRepository.save(exsistingItem);
+      }
+    }
+  }
+
+  async syncSectorCountryOne(id: number) {
+    let localMCountrySector = await this.countrySectorRepository.find({ where: { countryId: id } });
+    let Pmu: any;
+
+    await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
+      Pmu = m.data.filter((a) => a.countryId == id);
+      localMCountrySector.forEach(async (a) => await this.countrySectorRepository.delete(a.id));
+      Pmu.forEach(async (a) => await this.countrySectorRepository.insert(a));
+    });
   }
 
   async manualSynUserOne(dto: any) {
@@ -132,10 +164,8 @@ export class AppService {
         exsistingItem.status = dto.status;
         await this.userRepository.save(exsistingItem);
       }
-
     }
   }
-
 
   async syncCountry() {
     let localMCountry = await this.countryRepository.find();
@@ -156,8 +186,6 @@ export class AppService {
         }
       });
     });
-
-
   }
 
   async syncSectorCountry() {
@@ -174,8 +202,6 @@ export class AppService {
         sec.forEach((a) => this.countrySectorRepository.delete(a.id));
       }
     });
-
-
 
     setTimeout(async () => {
       await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
@@ -196,10 +222,6 @@ export class AppService {
         });
       });
     }, 5000)
-
-
-
-
   }
 
   async syncMethodologyData() {
@@ -233,8 +255,6 @@ export class AppService {
             (a) => a.uniqueIdentification === me.uniqueIdentification
           );
 
-
-
           if (!exsistingItem) {
             let ins = new Institution();
             ins.name = me.mrvInstitution;
@@ -244,15 +264,12 @@ export class AppService {
             ins.country = me.countryId;
             let n = await this.insRepository.insert(ins);
 
-
             if (me.userTypeId == 2) {
               me.id = null;
               me.userTypeId = "1";
               me.institutionId = n.identifiers[0].id;
               await this.userRepository.insert(me);
             }
-
-
 
           }
           else {
@@ -273,12 +290,9 @@ export class AppService {
 
               await this.userRepository.save(me);
             }
-
           }
         }
-      })
-
-        ;
+      });
     }, error => {
       throw new InternalServerErrorException(error)
     });
