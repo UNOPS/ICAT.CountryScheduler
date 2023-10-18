@@ -21,18 +21,12 @@ import { MethodologyData } from './entity/methodology-data.entity';
 import { CountrySector } from './entity/country-sector.entity';
 import e from 'express';
 
-
-
-
 @Injectable()
 export class AppService {
   private readonly logger = new Logger(AppService.name);
   private readonly pmuBaseURl = process.env.PMU_BASE_URL;
   private readonly calEngineBaseURl = process.env.CAL_ENGINE_BASE_URL;
 
-  /**
-   *
-   */
   constructor(
     @InjectRepository(Methodology)
     private readonly methodologyRepository: Repository<Methodology>,
@@ -79,7 +73,6 @@ export class AppService {
     await this.syncSector();
     await this.syncApplicability();
     await this.syncMAction();
-
     await this.syncDefaultValue();
     await this.syncUnitConversion();
   }
@@ -142,7 +135,6 @@ export class AppService {
         exsistingItem.macModule = dto.macModule;
         await this.countryRepository.save(exsistingItem);
       }
-
     }
   }
 
@@ -214,10 +206,8 @@ export class AppService {
         exsistingItem.status = dto.status;
         await this.userRepository.save(exsistingItem);
       }
-
     }
   }
-
 
   async syncCountry() {
     let localMCountry = await this.countryRepository.find();
@@ -238,8 +228,6 @@ export class AppService {
         }
       });
     });
-
-
   }
 
   async syncSectorCountry() {
@@ -256,8 +244,6 @@ export class AppService {
         sec.forEach((a) => this.countrySectorRepository.delete(a.id));
       }
     });
-
-
 
     setTimeout(async () => {
       await this.getMetodlogyFromPMU('country/country-sector').subscribe(async (m) => {
@@ -278,10 +264,6 @@ export class AppService {
         });
       });
     }, 5000)
-
-
-
-
   }
 
   async syncMethodologyData() {
@@ -315,8 +297,6 @@ export class AppService {
             (a) => a.uniqueIdentification === me.uniqueIdentification
           );
 
-
-
           if (!exsistingItem) {
             let ins = new Institution();
             ins.name = me.mrvInstitution;
@@ -326,15 +306,12 @@ export class AppService {
             ins.country = me.countryId;
             let n = await this.insRepository.insert(ins);
 
-
             if (me.userTypeId == 2) {
               me.id = null;
               me.userTypeId = "1";
               me.institutionId = n.identifiers[0].id;
               await this.userRepository.insert(me);
             }
-
-
 
           }
           else {
@@ -355,12 +332,9 @@ export class AppService {
 
               await this.userRepository.save(me);
             }
-
           }
         }
-      })
-
-        ;
+      });
     }, error => {
       throw new InternalServerErrorException(error)
     });
