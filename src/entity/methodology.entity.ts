@@ -70,7 +70,7 @@ export class Methodology extends BaseTrackingEntity {
   @JoinColumn({ name: 'mitigationActionTypeId' })
   mitigationActionType?: MitigationAction;
 
-  @ManyToOne((type) => Country, { cascade: false })
+  @ManyToOne((type) => Country, { cascade: false ,eager: true})
   @JoinColumn({ name: 'countryId' })
   country?: Country;
 

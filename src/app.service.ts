@@ -87,6 +87,13 @@ export class AppService {
   async manualSynMethod() {
     await this.syncMethodology();
   }
+  async manualSynMethodOne(dto: any) {
+    await this.syncMethodologyOne(dto);
+  }
+  async manualSynMethodoloies(dto: any) {
+    await this.syncMethodologies(dto);
+  }
+
 
   async manualSynLerningMeterial() {
 
@@ -147,6 +154,43 @@ export class AppService {
       Pmu = m.data.filter((a) => a.countryId == id);
       localMCountrySector.forEach(async (a) => await this.countrySectorRepository.delete(a.id));
       Pmu.forEach(async (a) => await this.countrySectorRepository.insert(a));
+    });
+  }
+
+  async syncMethodologyOne(dto: Methodology) {
+    let meth = await this.methodologyRepository.findOne({ where: { uniqueIdentification: dto.uniqueIdentification } });
+    meth.isActive = dto.isActive;
+    await this.methodologyRepository.save(meth);
+  }
+
+  async syncMethodologies(dto: Country) {
+    let country = await this.countryRepository.findOne({ where: { id: dto.id } });
+    let pmu;
+    let oldmeth = await this.methodologyRepository.find({ where: { country: country } });
+
+    await this.getMetodlogyFromPMU('methodology').subscribe(async (m) => {
+      // console.log(m.data)
+      pmu = m.data.filter((a) => a.country.id == country.id);
+      console.log(pmu)
+      pmu.map(async (me) => {
+
+        if (me.uniqueIdentification) {
+          let exsistingItem = await oldmeth.find(
+            (a) => a.uniqueIdentification === me.uniqueIdentification,
+          );
+          if (!exsistingItem) {
+            me.baselineImage = me.method.baselineImage;
+            me.projectImage = me.method.projectImage;
+            me.projectionImage = me.method.projectionImage;
+            me.leakageImage = me.method.leakageImage;
+            me.resultImage = me.method.resultImage;
+            await this.methodologyRepository.insert(me);
+          } else {
+            exsistingItem.isActive =me.isActive
+            await this.methodologyRepository.save(exsistingItem);
+          }
+        }
+      });
     });
   }
 
@@ -541,6 +585,7 @@ export class AppService {
     });
   }
 
+
   async syncDefaultValue() {
     let localMethodology = await this.defaultValueRepository.find();
     await this.getMetodlogyFromCalEngine('default-value').subscribe(async (m) => {
@@ -582,7 +627,7 @@ export class AppService {
 
   getMetodlogyFromPMU(name: string): Observable<AxiosResponse<any>> {
     try {
-      let methodologuURL = this.pmuBaseURl + name;
+      let methodologuURL = "http://localhost:7080/" + name;
       return this.httpService.get(methodologuURL);
     } catch (e) {
     }
