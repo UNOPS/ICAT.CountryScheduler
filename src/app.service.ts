@@ -169,9 +169,7 @@ export class AppService {
     let oldmeth = await this.methodologyRepository.find({ where: { country: country } });
 
     await this.getMetodlogyFromPMU('methodology').subscribe(async (m) => {
-      // console.log(m.data)
       pmu = m.data.filter((a) => a.country.id == country.id);
-      console.log(pmu)
       pmu.map(async (me) => {
 
         if (me.uniqueIdentification) {
