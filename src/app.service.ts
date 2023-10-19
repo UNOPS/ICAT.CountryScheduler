@@ -599,7 +599,7 @@ export class AppService {
 
   getMetodlogyFromPMU(name: string): Observable<AxiosResponse<any>> {
     try {
-      let methodologuURL = "http://localhost:7080/" + name;
+      let methodologuURL = this.pmuBaseURl + name;
       return this.httpService.get(methodologuURL);
     } catch (e) {
     }
