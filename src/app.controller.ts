@@ -14,6 +14,15 @@ export class AppController {
     this.appService.manualSynMethod();
   }
 
+  @Post('methodologyone')
+  async manualSyncMethodologyOne(@Body() dto: any): Promise<any>{    
+    this.appService.manualSynMethodOne(dto);
+  }
+  @Post('methodologies')
+  async manualSyncMethodologies(@Body() dto: any): Promise<any>{
+    this.appService.manualSynMethodoloies(dto);
+  }
+
   @Get('lerninigMeterial')
   manualSynclerninigMeterial(){
     this.appService.manualSynLerningMeterial();
