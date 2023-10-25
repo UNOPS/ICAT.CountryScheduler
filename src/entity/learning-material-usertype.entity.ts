@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn,Generated} from "typeorm";
 import { BaseTrackingEntity } from "./base/base.tracking.entity";
 import { LearningMaterial } from "./learning-material.entity";
 import { UserType } from "./user.type.entity";
@@ -15,7 +15,8 @@ export class LearningMaterialUserType extends BaseTrackingEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ default: null })
+    @Column()
+    @Generated('uuid')
     uniqueIdentification: string;
 
 

@@ -1,4 +1,4 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn,Column } from "typeorm";
+import { Entity, ManyToOne, PrimaryGeneratedColumn,Column,Generated } from "typeorm";
 import { BaseTrackingEntity } from "./base/base.tracking.entity";
 import { LearningMaterial } from "./learning-material.entity";
 import { Sector } from "./sector.entity";
@@ -16,7 +16,8 @@ export class LearningMaterialSector extends BaseTrackingEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({ default: null })
+    @Column()
+    @Generated('uuid')
     uniqueIdentification: string;
 
     @ManyToOne(() => LearningMaterial, learningMaterial => learningMaterial.learningMaterialsector)

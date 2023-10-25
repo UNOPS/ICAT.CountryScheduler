@@ -176,7 +176,7 @@ export class AppService {
             me.resultImage = me.method.resultImage;
             await this.methodologyRepository.insert(me);
           } else {
-            exsistingItem.isActive =me.isActive
+            exsistingItem.isActive = me.isActive
             await this.methodologyRepository.save(exsistingItem);
           }
         }
@@ -417,6 +417,67 @@ export class AppService {
     });
   }
 
+  async synclearningMeterialOne(dto: any) {
+    const lm = await this.learningMeterialRepository.save(dto);
+
+    dto.learningMaterialsector.map((a) => {
+      a.learningMaterial2.id = lm.id;
+      a.sector.id = dto.learningMaterialsector[0].sector.id;
+    });
+
+    try {
+      dto.learningMaterialsector.map(async (a) => {
+        const lms = await this.learningMeterialSectorRepository.save(await a);
+      });
+    } catch (error) { }
+
+    dto.learningMaterialusertype.map((b) => {
+      b.learningMaterial.id = lm.id;
+      b.userType.id = dto.learningMaterialusertype[0].userType.id;
+    });
+
+    try {
+      dto.learningMaterialusertype.map(async (b) => {
+        if (b.userid == 2) {
+          b.userType.id = 1;
+          this.learningMeterialUserTypeRepository.save(b);
+        }
+        else if (b.userid == 6) {
+          b.userType.id = 2;
+          this.learningMeterialUserTypeRepository.save(b);
+        }
+        else if (b.userid == 7) {
+          b.userType.id = 3;
+          this.learningMeterialUserTypeRepository.save(b);
+        }
+        else if (b.userid == 8) {
+          b.userType.id = 4;
+          this.learningMeterialUserTypeRepository.save(b);
+        }
+        else if (b.userid == 9) {
+          b.userType.id = 5;
+          this.learningMeterialUserTypeRepository.save(b);
+        }
+        else if (b.userid == 10) {
+          b.userType.id = 6;
+          this.learningMeterialUserTypeRepository.save(b);
+        }
+        else if (b.userid == 11) {
+          b.userType.id = 7;
+          this.learningMeterialUserTypeRepository.save(b);
+        }
+        else if (b.userid == 12) {
+          b.userType.id = 8;
+          this.learningMeterialUserTypeRepository.save(b);
+        }
+        else if (b.userid == 13) {
+          b.userType.id = 9;
+          this.learningMeterialUserTypeRepository.save(b);
+        }
+      });
+    } catch (error) { }
+  }
+
   async synclearningMeterialSector() {
     let localMCountry = await this.learningMeterialSectorRepository.find();
     await this.getMetodlogyFromPMU('learning-material/sector').subscribe(async (m) => {
@@ -599,6 +660,7 @@ export class AppService {
 
   getMetodlogyFromPMU(name: string): Observable<AxiosResponse<any>> {
     try {
+      // let methodologuURL = this.pmuBaseURl + name;
       let methodologuURL = "http://localhost:7080/" + name;
       return this.httpService.get(methodologuURL);
     } catch (e) {

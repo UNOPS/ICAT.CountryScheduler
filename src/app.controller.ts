@@ -27,6 +27,10 @@ export class AppController {
   manualSynclerninigMeterial(){
     this.appService.manualSynLerningMeterial();
   }
+  @Post('lerninigMeterialOne')
+  manualSynclerninigMeterialOne(@Body() dto: any){
+    this.appService.synclearningMeterialOne(dto);
+  }
 
   @Get('country')
   manualSyncCountry(){

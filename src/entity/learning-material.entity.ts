@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany, DeleteDateColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany, DeleteDateColumn,Generated } from "typeorm";
 import { LearningMaterialUserType } from "./learning-material-usertype.entity";
 import { LearningMaterialSector } from "./learning-material-sector.entity";
 import { BaseTrackingEntity } from "./base/base.tracking.entity";
@@ -34,7 +34,8 @@ export class LearningMaterial extends BaseTrackingEntity {
     @DeleteDateColumn()
     deletedAt?: Date;
 
-    @Column({ default: null })
+    @Column()
+    @Generated('uuid')
     uniqueIdentification: string;
 
     @OneToMany(() => LearningMaterialUserType, learningMaterialUserType => learningMaterialUserType.userType)
