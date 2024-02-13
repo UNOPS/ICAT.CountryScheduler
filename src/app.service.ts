@@ -20,6 +20,7 @@ import { Institution } from './entity/institution.entity';
 import { MethodologyData } from './entity/methodology-data.entity';
 import { CountrySector } from './entity/country-sector.entity';
 import e from 'express';
+import { UserType } from './entity/user.type.entity';
 
 @Injectable()
 export class AppService {
@@ -193,12 +194,18 @@ export class AppService {
       ins.telephoneNumber = '';
       ins.sectorId = 0;
       ins.country = dto.countryId;
-      let n = await this.insRepository.insert(ins);
+      await this.insRepository.insert(ins);
+      let n= await  this.insRepository.findOne({where:{name:dto.mrvInstitution}});
       if (dto.userType.id == 2) {
         dto.id = null;
-        dto.userTypeId = "1";
-        dto.institutionId = n.identifiers[0].id;
-        await this.userRepository.insert(dto);
+        dto.userTypeId=1;
+        let type =new UserType();
+        type.id=1;
+        dto.userType = type;
+
+        dto.institutionId = n.id;
+        dto.institution =n
+        await this.userRepository.save(dto);
       }
     }
     else {
